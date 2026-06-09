@@ -1,4 +1,4 @@
-# Testing App
+# Voice Reader
 
 An Expo SDK 56 React Native app demonstrating file selection with persistent storage across iOS, Android, and web.
 
