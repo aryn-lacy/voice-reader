@@ -34,11 +34,19 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4a8fb6ea-573f-40fe-9793-24df7b4bddb2"
+      }
+    },
+    "owner": "aryn.lacy"
   }
 }
