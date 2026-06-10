@@ -95,10 +95,19 @@ export async function setStorageItemAsync(key: string, value: string | null) {
       console.error('Local storage is unavailable:', e);
     }
   } else {
-    if (value === null) {
-      await SecureStore.deleteItemAsync(key);
-    } else {
-      await SecureStore.setItemAsync(key, value);
+    // Wrap native SecureStore operations in try/catch for consistency with the
+    // web branch. SecureStore can throw if the keychain is unavailable (e.g.,
+    // device is locked, keychain ACL failure), and callers like the useStorageState
+    // setter don't await the returned promise, so an unhandled rejection would
+    // surface at the process level without this guard.
+    try {
+      if (value === null) {
+        await SecureStore.deleteItemAsync(key);
+      } else {
+        await SecureStore.setItemAsync(key, value);
+      }
+    } catch (e) {
+      console.error('SecureStore is unavailable:', e);
     }
   }
 }
@@ -128,19 +137,37 @@ export function useStorageState(key: string): UseStateHook<string> {
   // The key is in the dependency array so that if the consumer changes the key,
   // we re-read from the new storage location.
   useEffect(() => {
-    if (Platform.OS === 'web') {
+    // Wrap the entire hydration logic in an async function with a top-level
+    // try/catch so we always call setState at least once. Without this guard,
+    // two scenarios leave the hook permanently stuck in [isLoading=true, null]:
+    //   1. Web: if typeof localStorage === 'undefined' the if-branch is skipped
+    //      entirely and setState is never dispatched.
+    //   2. Native: if SecureStore.getItemAsync rejects (e.g., keychain error),
+    //      the .then() callback never runs, so setState is never dispatched.
+    // By catching all failures and calling setState(null), we ensure every code
+    // path transitions the hook out of the loading state.
+    async function hydrateFromStorage() {
       try {
-        if (typeof localStorage !== 'undefined') {
-          setState(localStorage.getItem(key));
+        if (Platform.OS === 'web') {
+          if (typeof localStorage !== 'undefined') {
+            setState(localStorage.getItem(key));
+          } else {
+            // localStorage is not available (e.g., server-side render context).
+            // Dispatch null so the hook moves from loading to [false, null].
+            setState(null);
+          }
+        } else {
+          const value = await SecureStore.getItemAsync(key);
+          setState(value);
         }
       } catch (e) {
-        console.error('Local storage is unavailable:', e);
+        console.error('Storage read failed:', e);
+        // Always dispatch a value so the hook never stays stuck in the loading
+        // state, even when storage access fails.
+        setState(null);
       }
-    } else {
-      SecureStore.getItemAsync(key).then((value: string | null) => {
-        setState(value);
-      });
     }
+    hydrateFromStorage();
   }, [key]);
 
   // Returns a memoized setter that updates both React state and persistent storage.

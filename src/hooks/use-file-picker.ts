@@ -239,8 +239,13 @@ export function useFilePicker(): UseFilePickerReturn {
       // Build the metadata object for the newly copied file.
       const metadata: SelectedFile = {
         name: destFile.name,
-        size: pickedFile.size || undefined,
-        mimeType: pickedFile.type || undefined,
+        // Use nullish coalescing (??) instead of logical OR (||) so that a
+        // legitimate size of 0 bytes is preserved as 0 rather than converted
+        // to undefined. || treats 0 as falsy; ?? only falls back for null/undefined.
+        // The same applies to mimeType: an empty string '' is technically a valid
+        // (though unusual) MIME value and should not be coerced to undefined.
+        size: pickedFile.size ?? undefined,
+        mimeType: pickedFile.type ?? undefined,
         localUri: destFile.uri,
         originalName: pickedFile.name,
         lastSelected: new Date().toISOString(),
@@ -284,10 +289,20 @@ export function useFilePicker(): UseFilePickerReturn {
         // We still want to clear the metadata and state regardless.
       }
     }
-    // Remove the metadata from SecureStore/localStorage.
-    await setStorageItemAsync(STORAGE_KEY, null);
-    // Reset React state so the UI shows "no file selected".
-    setSelectedFile(null);
+    // Wrap the storage clear in try/finally so React state is always reset even
+    // if SecureStore throws (e.g., keychain unavailable on native). Without this,
+    // a storage failure would bubble up to the press handler and prevent
+    // setSelectedFile(null) from running, leaving the UI stuck showing a
+    // selected file that can no longer be read.
+    try {
+      await setStorageItemAsync(STORAGE_KEY, null);
+    } catch (error) {
+      console.error('Error clearing file metadata from storage:', error);
+    } finally {
+      // Always reset React state so the UI shows "no file selected",
+      // regardless of whether the storage clear succeeded.
+      setSelectedFile(null);
+    }
   }, [selectedFile]); // selectedFile is needed to know which file to delete
 
   return { pickFile, selectedFile, isLoading, clearSelection, isRestoring };
