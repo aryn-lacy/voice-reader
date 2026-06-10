@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "testing-app",
-    "slug": "testing-app",
+    "name": "voice-reader",
+    "slug": "voice-reader",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "testingapp",
+    "scheme": "voicereader",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -34,11 +34,19 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4a8fb6ea-573f-40fe-9793-24df7b4bddb2"
+      }
+    },
+    "owner": "aryn.lacy"
   }
 }
