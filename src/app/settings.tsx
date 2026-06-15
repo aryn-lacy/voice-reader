@@ -45,9 +45,9 @@ export default function SettingsScreen() {
             <ThemedText type="default">Theme</ThemedText>
             <SegmentedControl
               options={[
-                { value: 'light', label: 'Light' },
-                { value: 'dark', label: 'Dark' },
-                { value: 'system', label: 'System' },
+                { value: 'light', label: '☀️' },
+                { value: 'dark', label: '🌙' },
+                { value: 'system', label: '🖥️' },
               ]}
               value={preference}
               onChange={setPreference}
