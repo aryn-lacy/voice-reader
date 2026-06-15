@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   segment: {
     flex: 1,
     paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.three,
+    paddingHorizontal: Spacing.one,
     borderRadius: Spacing.two,
     alignItems: 'center',
   },
