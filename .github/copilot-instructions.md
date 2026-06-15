@@ -8,6 +8,7 @@ Voice Reader is a React Native app built with Expo SDK 56, React 19, and TypeScr
 
 ## Tech Stack
 - **Framework**: Expo SDK 56 (managed workflow — no native ios/ or android/ directories)
+- **Node.js**: >=22.13.0
 - **React**: 19.2.3
 - **React Native**: 0.85.3
 - **TypeScript**: 6.x
