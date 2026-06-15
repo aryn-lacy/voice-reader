@@ -7,8 +7,10 @@ import { ExternalLink } from '@/components/external-link';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useColorSchemePreference } from '@/hooks/use-color-scheme-preference';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function TabTwoScreen() {
@@ -18,6 +20,7 @@ export default function TabTwoScreen() {
     bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
   };
   const theme = useTheme();
+  const [preference, setPreference] = useColorSchemePreference();
 
   const contentPlatformStyle = Platform.select({
     android: {
@@ -59,6 +62,21 @@ export default function TabTwoScreen() {
         </ThemedView>
 
         <ThemedView style={styles.sectionsWrapper}>
+          <Collapsible title="Settings">
+            <ThemedView style={styles.settingRow}>
+              <ThemedText type="default">Theme</ThemedText>
+              <SegmentedControl
+                options={[
+                  { value: 'light', label: 'Light' },
+                  { value: 'dark', label: 'Dark' },
+                  { value: 'system', label: 'System' },
+                ]}
+                value={preference}
+                onChange={setPreference}
+              />
+            </ThemedView>
+          </Collapsible>
+
           <Collapsible title="File-based routing">
             <ThemedText type="small">
               This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
@@ -176,5 +194,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     alignSelf: 'center',
+  },
+  settingRow: {
+    gap: Spacing.two,
+    flexDirection: 'column',
   },
 });
