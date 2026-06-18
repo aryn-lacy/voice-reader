@@ -1,12 +1,12 @@
-import { Platform, ScrollView, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { Dropdown } from "@/components/ui/dropdown";
-import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
-import { useColorSchemePreference } from "@/hooks/use-color-scheme-preference";
-import { useTheme } from "@/hooks/use-theme";
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { Dropdown } from '@/components/ui/dropdown';
+import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useColorSchemePreference } from '@/hooks/use-color-scheme-preference';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function SettingsScreen() {
   const safeAreaInsets = useSafeAreaInsets();
@@ -46,9 +46,9 @@ export default function SettingsScreen() {
             <ThemedText type="default">Theme</ThemedText>
             <Dropdown
               options={[
-                { value: "light", label: "☀️ Light" },
-                { value: "dark", label: "🌙 Dark" },
-                { value: "system", label: "🖥️ System" },
+                { value: 'light', label: '☀️ Light' },
+                { value: 'dark', label: '🌙 Dark' },
+                { value: 'system', label: '🖥️ System' },
               ]}
               value={preference}
               onChange={setPreference}
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   container: {
     maxWidth: MaxContentWidth,
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.three,
   },
   settingRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

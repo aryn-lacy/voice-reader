@@ -33,14 +33,14 @@ function isValidPreference(value: string | null): value is ColorSchemePreference
  *                 otherwise the stored 'light' | 'dark' | 'system'
  *   - setPreference(next): persists and applies immediately
  *
- * 'system' calls Appearance.setColorScheme(null) → follows OS.
+ * 'system' calls Appearance.setColorScheme('unspecified') → follows OS.
  */
 export function useColorSchemePreference() {
   const [[isLoading, stored], setStored] = useStorageState(STORAGE_KEY);
 
   // Apply stored preference once hydration completes. Idempotent — safe to run
   // in every consumer. _layout.tsx must use this hook so the apply fires on
-  // app start (not just when the user navigates to explore).
+  // app start (not just when the user navigates to settings).
   useEffect(() => {
     if (isLoading) return;
     applyPreference(isValidPreference(stored) ? stored : 'system');

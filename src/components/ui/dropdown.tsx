@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.four,
     marginTop: Spacing.six,
     maxWidth: 320,
+    alignSelf: 'center',
   },
   option: {
     flexDirection: 'row',
